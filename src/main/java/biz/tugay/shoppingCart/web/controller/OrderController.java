@@ -44,11 +44,11 @@ public class OrderController
    */
   @GetMapping(value = "{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<OrderItemDto> getOrderItemsForOrder(@PathVariable("orderId") String orderId) {
-    List<OrderItem> orderItems = orderItemRepository.findAllByOrderIdProductSku_OrderId(orderId);
+    List<OrderItem> orderItems = orderItemRepository.findAllByOrderItemId_OrderId(orderId);
 
     List<OrderItemDto> orderItemDtos = new ArrayList<>();
     for (OrderItem orderItem : orderItems) {
-      Product product = productRepository.findDistinctBySku(orderItem.getOrderIdProductSku().getSku());
+      Product product = productRepository.findDistinctBySku(orderItem.getOrderItemId().getSku());
       orderItemDtos.add(new OrderItemDto(product.getName(), orderItem.getItemCount()));
     }
 

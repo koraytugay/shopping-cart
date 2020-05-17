@@ -5,7 +5,7 @@ import java.util.List;
 
 import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
-import biz.tugay.shoppingCart.core.entity.compositeKey.CartIdProductSku;
+import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
 import biz.tugay.shoppingCart.core.repository.ProductRepository;
 import biz.tugay.shoppingCart.core.repository.ShoppingCartProductRepository;
 import biz.tugay.shoppingCart.web.dto.ShoppingCartProductDto;
@@ -64,12 +64,12 @@ public class ShoppingCartControllerTest
     productRepository.save(product_b);
 
     ShoppingCartProduct shoppingCartProduct = new ShoppingCartProduct();
-    shoppingCartProduct.setCartIdProductSku(new CartIdProductSku(shoppingCartId, product_a.getSku()));
+    shoppingCartProduct.setShoppingCartProductId(new ShoppingCartProductId(shoppingCartId, product_a.getSku()));
     shoppingCartProduct.setItemCount(10);
     shoppingCartProductRepository.save(shoppingCartProduct);
 
     shoppingCartProduct = new ShoppingCartProduct();
-    shoppingCartProduct.setCartIdProductSku(new CartIdProductSku(shoppingCartId, product_b.getSku()));
+    shoppingCartProduct.setShoppingCartProductId(new ShoppingCartProductId(shoppingCartId, product_b.getSku()));
     shoppingCartProduct.setItemCount(12);
     shoppingCartProductRepository.save(shoppingCartProduct);
   }
@@ -113,18 +113,18 @@ public class ShoppingCartControllerTest
     assertThat(statusCode.value()).isEqualTo(HttpStatus.OK.value());
 
     List<ShoppingCartProduct> shoppingCart =
-        shoppingCartProductRepository.findAllByCartIdProductSku_CartId(shoppingCartId);
+        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId);
 
     assertThat(shoppingCart.size()).isEqualTo(1);
 
     long productACount = shoppingCart.stream()
-        .filter(shoppingCartProduct -> shoppingCartProduct.getCartIdProductSku().getSku().equals(product_a.getSku()))
+        .filter(scp -> scp.getShoppingCartProductId().getSku().equals(product_a.getSku()))
         .count();
 
     assertThat(productACount).isEqualTo(0);
 
     long productBCount = shoppingCart.stream()
-        .filter(shoppingCartProduct -> shoppingCartProduct.getCartIdProductSku().getSku().equals(product_b.getSku()))
+        .filter(scp -> scp.getShoppingCartProductId().getSku().equals(product_b.getSku()))
         .count();
 
     assertThat(productBCount).isEqualTo(1);

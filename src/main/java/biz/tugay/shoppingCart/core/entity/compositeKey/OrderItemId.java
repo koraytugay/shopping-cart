@@ -1,14 +1,13 @@
 package biz.tugay.shoppingCart.core.entity.compositeKey;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class OrderIdProductSku
+public class OrderItemId
     implements Serializable
 {
   @Basic
@@ -19,10 +18,10 @@ public class OrderIdProductSku
   @Column(name = "sku")
   private String sku;
 
-  public OrderIdProductSku() {
+  public OrderItemId() {
   }
 
-  public OrderIdProductSku(String orderId, String sku) {
+  public OrderItemId(String orderId, String sku) {
     this.orderId = orderId;
     this.sku = sku;
   }
@@ -41,23 +40,5 @@ public class OrderIdProductSku
 
   public void setSku(String sku) {
     this.sku = sku;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    OrderIdProductSku that = (OrderIdProductSku) o;
-    return Objects.equals(orderId, that.orderId) &&
-        Objects.equals(sku, that.sku);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(orderId, sku);
   }
 }

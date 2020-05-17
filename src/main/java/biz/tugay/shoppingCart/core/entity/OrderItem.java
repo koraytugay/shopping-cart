@@ -1,7 +1,6 @@
 package biz.tugay.shoppingCart.core.entity;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -9,10 +8,12 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import biz.tugay.shoppingCart.core.entity.compositeKey.OrderIdProductSku;
+import biz.tugay.shoppingCart.core.entity.compositeKey.OrderItemId;
 
 /**
- * Represents an order item. A complete order is one or more OrderItem entities.
+ * An OrderItem is an entry in an Order, in other words: an Order has one to many OrderItems.
+ * An `orederId` is a unique id that represents a single Order.
+ * An OrderItem is identified by composite key: order-id and sku.
  */
 @Entity
 @Table(name = "order_item")
@@ -20,7 +21,7 @@ public class OrderItem
     implements Serializable
 {
   @EmbeddedId
-  private OrderIdProductSku orderIdProductSku;
+  private OrderItemId orderItemId;
 
   @Basic
   @Column(name = "item_count")
@@ -29,17 +30,17 @@ public class OrderItem
   public OrderItem() {
   }
 
-  public OrderItem(OrderIdProductSku orderIdProductSku, int itemCount) {
-    this.orderIdProductSku = orderIdProductSku;
+  public OrderItem(OrderItemId orderItemId, int itemCount) {
+    this.orderItemId = orderItemId;
     this.itemCount = itemCount;
   }
 
-  public OrderIdProductSku getOrderIdProductSku() {
-    return orderIdProductSku;
+  public OrderItemId getOrderItemId() {
+    return orderItemId;
   }
 
-  public void setOrderIdProductSku(OrderIdProductSku orderIdProductSku) {
-    this.orderIdProductSku = orderIdProductSku;
+  public void setOrderItemId(OrderItemId orderIdProductSku) {
+    this.orderItemId = orderIdProductSku;
   }
 
   public int getItemCount() {
@@ -48,22 +49,5 @@ public class OrderItem
 
   public void setItemCount(int itemCount) {
     this.itemCount = itemCount;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    OrderItem orderItem = (OrderItem) o;
-    return Objects.equals(orderIdProductSku, orderItem.orderIdProductSku);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(orderIdProductSku);
   }
 }

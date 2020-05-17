@@ -4,7 +4,7 @@ import java.util.Map;
 
 import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
-import biz.tugay.shoppingCart.core.entity.compositeKey.CartIdProductSku;
+import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
 import biz.tugay.shoppingCart.core.repository.ProductRepository;
 import biz.tugay.shoppingCart.core.repository.ShoppingCartProductRepository;
 import org.junit.After;
@@ -55,7 +55,7 @@ public class ShoppingCartServiceTest
     productRepository.save(product);
 
     ShoppingCartProduct shoppingCartProduct = new ShoppingCartProduct();
-    shoppingCartProduct.setCartIdProductSku(new CartIdProductSku(shoppingCartId, peperoniSku));
+    shoppingCartProduct.setShoppingCartProductId(new ShoppingCartProductId(shoppingCartId, peperoniSku));
     shoppingCartProduct.setItemCount(peperoniCount);
     shoppingCartProductRepository.save(shoppingCartProduct);
   }

@@ -1,7 +1,6 @@
 package biz.tugay.shoppingCart.core.entity;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -9,11 +8,11 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import biz.tugay.shoppingCart.core.entity.compositeKey.CartIdProductSku;
+import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
 
 /**
- * Represents a product (identified by its sku), in a shopping cart (identified by a UUID) and number of that particular
- * product in the cart.
+ * Represents a product (identified by its sku) in a shopping cart (identified by a UUID) and the item count of that
+ * product in that cart.
  */
 @Entity
 @Table(name = "shopping_cart")
@@ -21,18 +20,18 @@ public class ShoppingCartProduct
     implements Serializable
 {
   @EmbeddedId
-  private CartIdProductSku cartIdProductSku = new CartIdProductSku();
+  private ShoppingCartProductId shoppingCartProductId = new ShoppingCartProductId();
 
   @Basic
   @Column(name = "item_count")
   private int itemCount;
 
-  public CartIdProductSku getCartIdProductSku() {
-    return cartIdProductSku;
+  public ShoppingCartProductId getShoppingCartProductId() {
+    return shoppingCartProductId;
   }
 
-  public void setCartIdProductSku(CartIdProductSku shoppingCartId) {
-    this.cartIdProductSku = shoppingCartId;
+  public void setShoppingCartProductId(ShoppingCartProductId shoppingCartId) {
+    this.shoppingCartProductId = shoppingCartId;
   }
 
   public int getItemCount() {
@@ -41,22 +40,5 @@ public class ShoppingCartProduct
 
   public void setItemCount(int itemCount) {
     this.itemCount = itemCount;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ShoppingCartProduct that = (ShoppingCartProduct) o;
-    return Objects.equals(cartIdProductSku, that.cartIdProductSku);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(cartIdProductSku);
   }
 }

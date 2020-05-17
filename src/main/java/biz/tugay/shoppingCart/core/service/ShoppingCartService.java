@@ -6,7 +6,7 @@ import java.util.Map;
 
 import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
-import biz.tugay.shoppingCart.core.entity.compositeKey.CartIdProductSku;
+import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
 import biz.tugay.shoppingCart.core.repository.ProductRepository;
 import biz.tugay.shoppingCart.core.repository.ShoppingCartProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +34,11 @@ public class ShoppingCartService
   public Map<Product, Integer> getShoppingCartContents(String shoppingCartId) {
     HashMap<Product, Integer> shoppingCartContents = new HashMap<>();
 
-    List<ShoppingCartProduct> products = shoppingCartProductRepository.findAllByCartIdProductSku_CartId(shoppingCartId);
+    List<ShoppingCartProduct> products =
+        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId);
     for (ShoppingCartProduct shoppingCartProduct : products) {
-      String sku = shoppingCartProduct.getCartIdProductSku().getSku();
+      String sku = shoppingCartProduct.getShoppingCartProductId().getSku();
       Product product = productRepository.findDistinctBySku(sku);
-
       shoppingCartContents.put(product, shoppingCartProduct.getItemCount());
     }
 
@@ -55,16 +55,22 @@ public class ShoppingCartService
    * item is removed from the cart.
    */
   public void updateCartUpdateProductByItemCount(String cartId, String sku, int itemCount) {
-    // Find the product in the shopping cart, or create a new one if it does not exist
-    ShoppingCartProduct scp = shoppingCartProductRepository.findByCartIdProductSku(new CartIdProductSku(cartId, sku));
+    // Find the product in the shopping cart, or create a new one if it does not exist.
+    ShoppingCartProductId shoppingCartProductId = new ShoppingCartProductId(cartId, sku);
+    ShoppingCartProduct scp = shoppingCartProductRepository.findByShoppingCartProductId(shoppingCartProductId);
     if (scp == null) {
+      // One cannot decrement count / remove product from a cart if it does not already exist.
+      if (itemCount < 0) {
+        return;
+      }
       scp = newShoppingCartProduct(cartId, sku);
     }
 
     // Update the product count in the cart
     scp.setItemCount(scp.getItemCount() + itemCount);
 
-    // Save if we have a positive number of items, remove product from cart otherwise
+    // Save if we have a positive number of items.
+    // Remove product from cart otherwise.
     if (scp.getItemCount() > 0) {
       shoppingCartProductRepository.save(scp);
     }
@@ -76,8 +82,8 @@ public class ShoppingCartService
   private ShoppingCartProduct newShoppingCartProduct(String cartId, String sku) {
     ShoppingCartProduct shoppingCartProduct = new ShoppingCartProduct();
 
-    shoppingCartProduct.getCartIdProductSku().setCartId(cartId);
-    shoppingCartProduct.getCartIdProductSku().setSku(sku);
+    shoppingCartProduct.getShoppingCartProductId().setCartId(cartId);
+    shoppingCartProduct.getShoppingCartProductId().setSku(sku);
     shoppingCartProduct.setItemCount(0);
 
     return shoppingCartProduct;

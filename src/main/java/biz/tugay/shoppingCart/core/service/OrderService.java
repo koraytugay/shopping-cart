@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import biz.tugay.shoppingCart.core.entity.OrderItem;
 import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
-import biz.tugay.shoppingCart.core.entity.compositeKey.OrderIdProductSku;
+import biz.tugay.shoppingCart.core.entity.compositeKey.OrderItemId;
 import biz.tugay.shoppingCart.core.repository.OrderItemRepository;
 import biz.tugay.shoppingCart.core.repository.ShoppingCartProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +37,16 @@ public class OrderService
    */
   public String submitOrder(String shoppingCartId) {
     List<ShoppingCartProduct> shoppingCartProducts =
-        shoppingCartProductRepository.findAllByCartIdProductSku_CartId(shoppingCartId);
+        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId);
 
     // Generate a random id for tracking purposes
     String orderId = UUID.randomUUID().toString();
 
     List<OrderItem> orderItems = shoppingCartProducts.stream()
         .map(shoppingCartProduct -> {
-          String sku = shoppingCartProduct.getCartIdProductSku().getSku();
+          String sku = shoppingCartProduct.getShoppingCartProductId().getSku();
           int itemCount = shoppingCartProduct.getItemCount();
-          OrderIdProductSku orderItemKey = new OrderIdProductSku(orderId, sku);
+          OrderItemId orderItemKey = new OrderItemId(orderId, sku);
           return new OrderItem(orderItemKey, itemCount);
         })
         .collect(Collectors.toList());
