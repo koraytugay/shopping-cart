@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS shopping_cart
     PRIMARY KEY (cart_id, sku)
 );
 
-CREATE TABLE IF NOT EXISTS order_history
+CREATE TABLE IF NOT EXISTS order_item
 (
     order_id       VARCHAR(36)  NOT NULL,
     sku            VARCHAR(36)  NOT NULL,

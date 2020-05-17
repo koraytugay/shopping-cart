@@ -11,9 +11,12 @@ import javax.persistence.Table;
 
 import biz.tugay.shoppingCart.core.entity.compositeKey.OrderIdProductSku;
 
+/**
+ * Represents an order item. A complete order is one or more OrderItem entities.
+ */
 @Entity
-@Table(name = "order_history")
-public class OrderHistory
+@Table(name = "order_item")
+public class OrderItem
     implements Serializable
 {
   @EmbeddedId
@@ -23,10 +26,10 @@ public class OrderHistory
   @Column(name = "item_count")
   private int itemCount;
 
-  public OrderHistory() {
+  public OrderItem() {
   }
 
-  public OrderHistory(OrderIdProductSku orderIdProductSku, int itemCount) {
+  public OrderItem(OrderIdProductSku orderIdProductSku, int itemCount) {
     this.orderIdProductSku = orderIdProductSku;
     this.itemCount = itemCount;
   }
@@ -55,8 +58,8 @@ public class OrderHistory
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrderHistory order = (OrderHistory) o;
-    return Objects.equals(orderIdProductSku, order.orderIdProductSku);
+    OrderItem orderItem = (OrderItem) o;
+    return Objects.equals(orderIdProductSku, orderItem.orderIdProductSku);
   }
 
   @Override
