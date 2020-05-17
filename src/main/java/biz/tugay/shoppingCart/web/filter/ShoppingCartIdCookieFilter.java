@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 public class ShoppingCartIdCookieFilter
     implements Filter
 {
-  public static final String SHOPPING_CART_ID_COOKIE_KEY = "shopping-cart-id";
+  private final String SHOPPING_CART_ID_COOKIE_KEY = "shopping-cart-id";
 
   private final Predicate<Cookie> shoppingCartIdPredicate = c -> c.getName().equals(SHOPPING_CART_ID_COOKIE_KEY);
 
