@@ -22,8 +22,7 @@ public class OrderService
   @Autowired
   public OrderService(
       ShoppingCartProductRepository shoppingCartProductRepository,
-      OrderItemRepository orderItemRepository
-  )
+      OrderItemRepository orderItemRepository)
   {
     this.shoppingCartProductRepository = shoppingCartProductRepository;
     this.orderItemRepository = orderItemRepository;
