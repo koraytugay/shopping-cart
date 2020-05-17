@@ -23,8 +23,7 @@ export default function ShoppingCart({setSuccessAlert, setCurrentTab}) {
   function submitShoppingCart() {
     axios.get('/api/shoppingCart')
         .then(response => {
-          // When user submits their shopping cart, first make sure the products and counts they see in the tab is up to date.
-          // Implementation goes like this: We iterate through all the items we have
+          // When user submits their shopping cart, make sure the products and counts they see in the tab is up to date.
           let validationSet = new Set();
 
           shoppingCart.forEach(i => {
