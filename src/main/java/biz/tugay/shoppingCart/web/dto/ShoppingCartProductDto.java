@@ -17,13 +17,13 @@ public class ShoppingCartProductDto
 {
   public ProductDto product;
 
-  public long count;
+  public int count;
 
   @SuppressWarnings("unused")
   public ShoppingCartProductDto() {
   }
 
-  public ShoppingCartProductDto(ProductDto product, long count) {
+  public ShoppingCartProductDto(ProductDto product, int count) {
     this.product = product;
     this.count = count;
   }

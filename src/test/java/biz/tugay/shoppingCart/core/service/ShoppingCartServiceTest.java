@@ -33,7 +33,7 @@ public class ShoppingCartServiceTest
   // Sample data
   private final String peperoniSku = "product-sku", hawaiianSku = "hawaiian-sku";
 
-  private final long peperoniCount = 42;
+  private final int peperoniCount = 42;
 
   private final String shoppingCartId = "shopping-cart-id";
 
@@ -71,7 +71,7 @@ public class ShoppingCartServiceTest
 
   @Test
   public void mustGetShoppingCartContents() {
-    Map<Product, Long> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
+    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
     assertThat(shoppingCartContents.size()).isEqualTo(1);
     assertThat(shoppingCartContents.get(shoppingCartContents.keySet().iterator().next())).isEqualTo(peperoniCount);
   }
@@ -81,7 +81,7 @@ public class ShoppingCartServiceTest
     // Add 42 more peperoni pizzas
     shoppingCartService.updateCartUpdateProductByItemCount(shoppingCartId, peperoniSku, peperoniCount);
 
-    Map<Product, Long> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
+    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
     assertThat(shoppingCartContents.size()).isEqualTo(1);
     assertThat(shoppingCartContents.get(shoppingCartContents.keySet().iterator().next())).isEqualTo(peperoniCount * 2);
   }
@@ -90,14 +90,14 @@ public class ShoppingCartServiceTest
   public void mustInsertNewShoppingCartProductIfProductDoesNotExist() {
     shoppingCartService.updateCartUpdateProductByItemCount(shoppingCartId, hawaiianSku, 1);
 
-    Map<Product, Long> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
+    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
     assertThat(shoppingCartContents.size()).isEqualTo(2);
   }
 
   @Test
   public void mustRemoveProductFromShoppingCartIfDecrementEqualsExisting() {
     shoppingCartService.updateCartUpdateProductByItemCount(shoppingCartId, peperoniSku, -peperoniCount);
-    Map<Product, Long> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
+    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
     assertThat(shoppingCartContents.keySet()).isEmpty();
   }
 }

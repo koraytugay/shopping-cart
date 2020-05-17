@@ -29,7 +29,7 @@ public class ShoppingCartController
   }
 
   @PostMapping("{sku}/{itemCount}")
-  public void addOrRemoveProduct(@PathVariable("sku") String sku, @PathVariable("itemCount") long itemCount) {
+  public void addOrRemoveProduct(@PathVariable("sku") String sku, @PathVariable("itemCount") int itemCount) {
     shoppingCartService.updateCartUpdateProductByItemCount(RequestContext.getShoppingCartId(), sku, itemCount);
   }
 
@@ -38,7 +38,7 @@ public class ShoppingCartController
     List<ShoppingCartProductDto> shoppingCartProductList = new ArrayList<>();
 
     String shoppingCartId = RequestContext.getShoppingCartId();
-    Map<Product, Long> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
+    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
 
     shoppingCartContents.forEach((product, itemCount) -> {
       ProductDto productResponseDto = new ProductDto(product);

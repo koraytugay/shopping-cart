@@ -21,12 +21,12 @@ public class OrderHistory
 
   @Basic
   @Column(name = "item_count")
-  private long itemCount;
+  private int itemCount;
 
   public OrderHistory() {
   }
 
-  public OrderHistory(OrderIdProductSku orderIdProductSku, long itemCount) {
+  public OrderHistory(OrderIdProductSku orderIdProductSku, int itemCount) {
     this.orderIdProductSku = orderIdProductSku;
     this.itemCount = itemCount;
   }
@@ -39,11 +39,11 @@ public class OrderHistory
     this.orderIdProductSku = orderIdProductSku;
   }
 
-  public long getItemCount() {
+  public int getItemCount() {
     return itemCount;
   }
 
-  public void setItemCount(long itemCount) {
+  public void setItemCount(int itemCount) {
     this.itemCount = itemCount;
   }
 

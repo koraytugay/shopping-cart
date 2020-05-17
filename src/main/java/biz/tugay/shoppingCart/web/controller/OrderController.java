@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import biz.tugay.shoppingCart.core.entity.OrderHistory;
+import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.repository.OrderRepository;
 import biz.tugay.shoppingCart.core.repository.ProductRepository;
 import biz.tugay.shoppingCart.core.service.OrderService;
 import biz.tugay.shoppingCart.web.RequestContext;
-import biz.tugay.shoppingCart.web.dto.OrderDto;
+import biz.tugay.shoppingCart.web.dto.OrderHistoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,15 +43,13 @@ public class OrderController
    * @return the details of a previous order.
    */
   @GetMapping(value = "{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<OrderDto> getOrderDetails(@PathVariable("orderId") String orderId) {
-    List<OrderHistory> orderHistory = orderRepository.findAllByOrderIdProductSku_OrderId(orderId);
+  public List<OrderHistoryDto> getOrderDetails(@PathVariable("orderId") String orderId) {
+    List<OrderHistory> orderHistoryList = orderRepository.findAllByOrderIdProductSku_OrderId(orderId);
 
-    List<OrderDto> orders = new ArrayList<>();
-    for (OrderHistory history : orderHistory) {
-      OrderDto orderDto = new OrderDto();
-      orderDto.productName = productRepository.findDistinctBySku(history.getOrderIdProductSku().getSku()).getName();
-      orderDto.itemCount = history.getItemCount();
-      orders.add(orderDto);
+    List<OrderHistoryDto> orders = new ArrayList<>();
+    for (OrderHistory orderHistory : orderHistoryList) {
+      Product product = productRepository.findDistinctBySku(orderHistory.getOrderIdProductSku().getSku());
+      orders.add(new OrderHistoryDto(product.getName(), orderHistory.getItemCount()));
     }
 
     return orders;

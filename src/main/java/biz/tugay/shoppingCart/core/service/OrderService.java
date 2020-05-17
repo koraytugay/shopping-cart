@@ -43,7 +43,7 @@ public class OrderService
     List<OrderHistory> orders = shoppingCartProducts.stream()
         .map(shoppingCartProduct -> {
           String sku = shoppingCartProduct.getCartIdProductSku().getSku();
-          long itemCount = shoppingCartProduct.getItemCount();
+          int itemCount = shoppingCartProduct.getItemCount();
           OrderIdProductSku orderKey = new OrderIdProductSku(orderId, sku);
           return new OrderHistory(orderKey, itemCount);
         })

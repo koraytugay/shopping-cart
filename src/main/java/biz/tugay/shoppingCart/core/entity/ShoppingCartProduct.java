@@ -25,7 +25,7 @@ public class ShoppingCartProduct
 
   @Basic
   @Column(name = "item_count")
-  private long itemCount;
+  private int itemCount;
 
   public CartIdProductSku getCartIdProductSku() {
     return cartIdProductSku;
@@ -35,11 +35,11 @@ public class ShoppingCartProduct
     this.cartIdProductSku = shoppingCartId;
   }
 
-  public long getItemCount() {
+  public int getItemCount() {
     return itemCount;
   }
 
-  public void setItemCount(long itemCount) {
+  public void setItemCount(int itemCount) {
     this.itemCount = itemCount;
   }
 

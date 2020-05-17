@@ -1,0 +1,5 @@
+target/
+.idea/
+frontend/build/
+*.iml
+**/.DS_Store

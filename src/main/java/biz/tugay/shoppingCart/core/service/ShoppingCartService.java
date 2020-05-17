@@ -31,8 +31,8 @@ public class ShoppingCartService
   /**
    * @return A Map of Products and the number of items in the cart identified by <code>shoppingCartId</code>.
    */
-  public Map<Product, Long> getShoppingCartContents(String shoppingCartId) {
-    HashMap<Product, Long> shoppingCartContents = new HashMap<>();
+  public Map<Product, Integer> getShoppingCartContents(String shoppingCartId) {
+    HashMap<Product, Integer> shoppingCartContents = new HashMap<>();
 
     List<ShoppingCartProduct> products = shoppingCartProductRepository.findAllByCartIdProductSku_CartId(shoppingCartId);
     for (ShoppingCartProduct shoppingCartProduct : products) {
@@ -54,7 +54,7 @@ public class ShoppingCartService
    * When decrementing, if there are x numbers of items and <code>itemCount</code> is less then -x,
    * item is removed from the cart.
    */
-  public void updateCartUpdateProductByItemCount(String cartId, String sku, long itemCount) {
+  public void updateCartUpdateProductByItemCount(String cartId, String sku, int itemCount) {
     // Find the product in the shopping cart, or create a new one if it does not exist
     ShoppingCartProduct scp = shoppingCartProductRepository.findByCartIdProductSku(new CartIdProductSku(cartId, sku));
     if (scp == null) {
