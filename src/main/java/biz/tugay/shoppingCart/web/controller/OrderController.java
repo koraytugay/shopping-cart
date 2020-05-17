@@ -40,7 +40,7 @@ public class OrderController
   }
 
   /**
-   * @return the details of an existing order by `orderId`.
+   * @return All OrderItems belonging to an Order.
    */
   @GetMapping(value = "{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<OrderItemDto> getOrderItemsForOrder(@PathVariable("orderId") String orderId) {
