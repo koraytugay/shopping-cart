@@ -7,13 +7,14 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import biz.tugay.shoppingCart.core.entity.compositeKey.OrderItemId;
 
 /**
  * An OrderItem is an entry in an Order, in other words: an Order has one to many OrderItems.
  * An `orederId` is a unique id that represents a single Order.
- * An OrderItem is identified by composite key: order-id and sku.
+ * An OrderItem is identified by composite key: order-id and a unique Product.
  */
 @Entity
 @Table(name = "order_item")
@@ -49,5 +50,13 @@ public class OrderItem
 
   public void setItemCount(int itemCount) {
     this.itemCount = itemCount;
+  }
+
+  /**
+   * Convenience method to get product from composite key.
+   */
+  @Transient
+  public Product getProduct() {
+    return orderItemId.getProduct();
   }
 }

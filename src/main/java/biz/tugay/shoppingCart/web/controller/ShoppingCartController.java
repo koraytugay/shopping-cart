@@ -39,12 +39,8 @@ public class ShoppingCartController
 
     String shoppingCartId = RequestContext.getShoppingCartId();
     Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
-
     shoppingCartContents.forEach((product, itemCount) -> {
-      ProductDto productResponseDto = new ProductDto(product);
-      ShoppingCartProductDto shoppingCartProductDto = new ShoppingCartProductDto(productResponseDto, itemCount);
-
-      shoppingCartProductList.add(shoppingCartProductDto);
+      shoppingCartProductList.add(new ShoppingCartProductDto(new ProductDto(product), itemCount));
     });
 
     return shoppingCartProductList;

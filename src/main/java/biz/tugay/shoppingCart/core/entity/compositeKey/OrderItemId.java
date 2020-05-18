@@ -1,10 +1,14 @@
 package biz.tugay.shoppingCart.core.entity.compositeKey;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
+
+import biz.tugay.shoppingCart.core.entity.Product;
 
 @Embeddable
 public class OrderItemId
@@ -14,16 +18,15 @@ public class OrderItemId
   @Column(name = "order_id", length = 36)
   private String orderId;
 
-  @Basic
-  @Column(name = "sku")
-  private String sku;
+  @ManyToOne
+  private Product product;
 
   public OrderItemId() {
   }
 
-  public OrderItemId(String orderId, String sku) {
+  public OrderItemId(String orderId, Product product) {
     this.orderId = orderId;
-    this.sku = sku;
+    this.product = product;
   }
 
   public String getOrderId() {
@@ -34,11 +37,29 @@ public class OrderItemId
     this.orderId = cartId;
   }
 
-  public String getSku() {
-    return sku;
+  public Product getProduct() {
+    return product;
   }
 
-  public void setSku(String sku) {
-    this.sku = sku;
+  public void setProduct(final Product product) {
+    this.product = product;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OrderItemId that = (OrderItemId) o;
+    return orderId.equals(that.orderId) &&
+        product.equals(that.product);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(orderId, product);
   }
 }

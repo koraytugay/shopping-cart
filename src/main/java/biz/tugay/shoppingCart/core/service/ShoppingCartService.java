@@ -1,13 +1,11 @@
 package biz.tugay.shoppingCart.core.service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
 import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
-import biz.tugay.shoppingCart.core.repository.ProductRepository;
 import biz.tugay.shoppingCart.core.repository.ShoppingCartProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +15,9 @@ public class ShoppingCartService
 {
   private ShoppingCartProductRepository shoppingCartProductRepository;
 
-  private ProductRepository productRepository;
-
   @Autowired
-  public ShoppingCartService(
-      ShoppingCartProductRepository shoppingCartProductRepository,
-      ProductRepository productRepository)
-  {
+  public ShoppingCartService(ShoppingCartProductRepository shoppingCartProductRepository) {
     this.shoppingCartProductRepository = shoppingCartProductRepository;
-    this.productRepository = productRepository;
   }
 
   /**
@@ -34,13 +26,8 @@ public class ShoppingCartService
   public Map<Product, Integer> getShoppingCartContents(String shoppingCartId) {
     HashMap<Product, Integer> shoppingCartContents = new HashMap<>();
 
-    List<ShoppingCartProduct> products =
-        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId);
-    for (ShoppingCartProduct shoppingCartProduct : products) {
-      String sku = shoppingCartProduct.getShoppingCartProductId().getSku();
-      Product product = productRepository.findDistinctBySku(sku);
-      shoppingCartContents.put(product, shoppingCartProduct.getItemCount());
-    }
+    shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId)
+        .forEach(scp -> shoppingCartContents.put(scp.getProduct(), scp.getItemCount()));
 
     return shoppingCartContents;
   }
@@ -56,26 +43,28 @@ public class ShoppingCartService
    */
   public void updateCartUpdateProductByItemCount(String cartId, String sku, int itemCount) {
     // Find the product in the shopping cart, or create a new one if it does not exist.
-    ShoppingCartProductId shoppingCartProductId = new ShoppingCartProductId(cartId, sku);
-    ShoppingCartProduct scp = shoppingCartProductRepository.findByShoppingCartProductId(shoppingCartProductId);
-    if (scp == null) {
+    ShoppingCartProductId shoppingCartProductId = new ShoppingCartProductId(cartId, new Product(sku));
+    ShoppingCartProduct shoppingCartProduct =
+        shoppingCartProductRepository.findByShoppingCartProductId(shoppingCartProductId);
+
+    if (shoppingCartProduct == null) {
       // One cannot decrement count / remove product from a cart if it does not already exist.
       if (itemCount < 0) {
         return;
       }
-      scp = newShoppingCartProduct(cartId, sku);
+      shoppingCartProduct = newShoppingCartProduct(cartId, sku);
     }
 
     // Update the product count in the cart
-    scp.setItemCount(scp.getItemCount() + itemCount);
+    shoppingCartProduct.setItemCount(shoppingCartProduct.getItemCount() + itemCount);
 
     // Save if we have a positive number of items.
     // Remove product from cart otherwise.
-    if (scp.getItemCount() > 0) {
-      shoppingCartProductRepository.save(scp);
+    if (shoppingCartProduct.getItemCount() > 0) {
+      shoppingCartProductRepository.save(shoppingCartProduct);
     }
     else {
-      shoppingCartProductRepository.delete(scp);
+      shoppingCartProductRepository.delete(shoppingCartProduct);
     }
   }
 
@@ -83,7 +72,7 @@ public class ShoppingCartService
     ShoppingCartProduct shoppingCartProduct = new ShoppingCartProduct();
 
     shoppingCartProduct.getShoppingCartProductId().setCartId(cartId);
-    shoppingCartProduct.getShoppingCartProductId().setSku(sku);
+    shoppingCartProduct.getShoppingCartProductId().setProduct(new Product(sku));
     shoppingCartProduct.setItemCount(0);
 
     return shoppingCartProduct;

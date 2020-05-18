@@ -1,12 +1,9 @@
 package biz.tugay.shoppingCart.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import biz.tugay.shoppingCart.core.entity.OrderItem;
-import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.repository.OrderItemRepository;
-import biz.tugay.shoppingCart.core.repository.ProductRepository;
 import biz.tugay.shoppingCart.core.service.OrderService;
 import biz.tugay.shoppingCart.web.RequestContext;
 import biz.tugay.shoppingCart.web.dto.OrderItemDto;
@@ -26,17 +23,13 @@ public class OrderController
 
   private OrderItemRepository orderItemRepository;
 
-  private ProductRepository productRepository;
-
   @Autowired
   public OrderController(
       OrderService orderService,
-      OrderItemRepository orderItemRepository,
-      ProductRepository productRepository)
+      OrderItemRepository orderItemRepository)
   {
     this.orderService = orderService;
     this.orderItemRepository = orderItemRepository;
-    this.productRepository = productRepository;
   }
 
   /**
@@ -44,15 +37,8 @@ public class OrderController
    */
   @GetMapping(value = "{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<OrderItemDto> getOrderItemsForOrder(@PathVariable("orderId") String orderId) {
-    List<OrderItem> orderItems = orderItemRepository.findAllByOrderItemId_OrderId(orderId);
-
-    List<OrderItemDto> orderItemDtos = new ArrayList<>();
-    for (OrderItem orderItem : orderItems) {
-      Product product = productRepository.findDistinctBySku(orderItem.getOrderItemId().getSku());
-      orderItemDtos.add(new OrderItemDto(product.getName(), orderItem.getItemCount()));
-    }
-
-    return orderItemDtos;
+    return orderItemRepository
+        .findAllByOrderItemId_OrderId(orderId).stream().map(OrderItemDto::new).collect(Collectors.toList());
   }
 
   /**

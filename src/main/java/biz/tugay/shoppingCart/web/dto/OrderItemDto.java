@@ -1,5 +1,7 @@
 package biz.tugay.shoppingCart.web.dto;
 
+import biz.tugay.shoppingCart.core.entity.OrderItem;
+
 public class OrderItemDto
 {
   public String productName;
@@ -10,8 +12,8 @@ public class OrderItemDto
   public OrderItemDto() {
   }
 
-  public OrderItemDto(String productName, int itemCount) {
-    this.productName = productName;
-    this.itemCount = itemCount;
+  public OrderItemDto(OrderItem orderItem) {
+    this.productName = orderItem.getProduct().getName();
+    this.itemCount = orderItem.getItemCount();
   }
 }

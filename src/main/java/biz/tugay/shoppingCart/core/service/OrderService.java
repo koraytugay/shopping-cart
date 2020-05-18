@@ -38,18 +38,16 @@ public class OrderService
     List<ShoppingCartProduct> shoppingCartProducts =
         shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId);
 
-    // Generate a random id for tracking purposes
+    // Generate a random id that will represent this order.
     String orderId = UUID.randomUUID().toString();
 
-    List<OrderItem> orderItems = shoppingCartProducts.stream()
-        .map(shoppingCartProduct -> {
-          String sku = shoppingCartProduct.getShoppingCartProductId().getSku();
-          int itemCount = shoppingCartProduct.getItemCount();
-          OrderItemId orderItemKey = new OrderItemId(orderId, sku);
-          return new OrderItem(orderItemKey, itemCount);
-        })
-        .collect(Collectors.toList());
+    // Put contents of the shopping cart items into the order in the form of OrderItem.
+    List<OrderItem> orderItems = shoppingCartProducts.stream().map(shoppingCartProduct -> {
+      OrderItemId orderItemKey = new OrderItemId(orderId, shoppingCartProduct.getProduct());
+      return new OrderItem(orderItemKey, shoppingCartProduct.getItemCount());
+    }).collect(Collectors.toList());
 
+    // Save Order, clear shopping cart.
     orderItemRepository.saveAll(orderItems);
     shoppingCartProductRepository.deleteAll(shoppingCartProducts);
 

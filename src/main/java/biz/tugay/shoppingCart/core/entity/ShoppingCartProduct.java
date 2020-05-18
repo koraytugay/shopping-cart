@@ -7,12 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
 
 /**
- * Represents a product (identified by its sku) in a shopping cart (identified by a UUID) and the item count of that
- * product in that cart.
+ * Represents a Product in a shopping cart (identified by a UUID) and the item count of that product in that cart.
  */
 @Entity
 @Table(name = "shopping_cart")
@@ -40,5 +40,13 @@ public class ShoppingCartProduct
 
   public void setItemCount(int itemCount) {
     this.itemCount = itemCount;
+  }
+
+  /**
+   * Convenience method to get product from composite key.
+   */
+  @Transient
+  public Product getProduct() {
+    return shoppingCartProductId.getProduct();
   }
 }

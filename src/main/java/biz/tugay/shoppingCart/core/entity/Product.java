@@ -1,6 +1,7 @@
 package biz.tugay.shoppingCart.core.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -25,6 +26,13 @@ public class Product
   @Column(name = "description")
   private String description;
 
+  public Product() {
+  }
+
+  public Product(String sku) {
+    this.sku = sku;
+  }
+
   public String getSku() {
     return sku;
   }
@@ -47,5 +55,22 @@ public class Product
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Product product = (Product) o;
+    return sku.equals(product.sku);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(sku);
   }
 }
