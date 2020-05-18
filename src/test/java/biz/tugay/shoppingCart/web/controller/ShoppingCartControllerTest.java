@@ -6,11 +6,8 @@ import java.util.List;
 import biz.tugay.shoppingCart.BaseIntegrationTest;
 import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
-import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
-import biz.tugay.shoppingCart.core.repository.ProductRepository;
 import biz.tugay.shoppingCart.core.repository.ShoppingCartProductRepository;
 import biz.tugay.shoppingCart.web.dto.ShoppingCartProductDto;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -18,6 +15,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import static biz.tugay.shoppingCart.web.controller.ShoppingCartController.PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -29,84 +27,46 @@ public class ShoppingCartControllerTest
   private TestRestTemplate restTemplate;
 
   @Autowired
-  private ProductRepository productRepository;
-
-  @Autowired
   private ShoppingCartProductRepository shoppingCartProductRepository;
-
-  // Sample data
-  private String shoppingCartId = "my-shopping-cart-id";
-
-  private Product peperoni, hawaii;
-
-  private int peperoniCount = 10, hawaiiCount = 12;
-
-  @Before
-  public void createSampleData() {
-    peperoni = new Product();
-    peperoni.setSku("peperoni-sku");
-    peperoni.setName("peperoni");
-    peperoni.setDescription("peperoni-description");
-    productRepository.save(peperoni);
-
-    hawaii = new Product();
-    hawaii.setSku("hawaii-sku");
-    hawaii.setName("hawaii");
-    hawaii.setDescription("hawaii-description");
-    productRepository.save(hawaii);
-
-    ShoppingCartProduct shoppingCartProduct = new ShoppingCartProduct();
-    shoppingCartProduct.setShoppingCartProductId(new ShoppingCartProductId(shoppingCartId, peperoni));
-    shoppingCartProduct.setItemCount(peperoniCount);
-    shoppingCartProductRepository.save(shoppingCartProduct);
-
-    shoppingCartProduct = new ShoppingCartProduct();
-    shoppingCartProduct.setShoppingCartProductId(new ShoppingCartProductId(shoppingCartId, hawaii));
-    shoppingCartProduct.setItemCount(hawaiiCount);
-    shoppingCartProductRepository.save(shoppingCartProduct);
-  }
 
   @Test
   public void mustGetShoppingCart() {
+    // Given a product and product being in a shopping cart
+    Product product = newPersistedProduct("product-sku", "product-name", "product-description");
+    ShoppingCartProduct scp = newPersistedShoppingCartProduct("shopping-cart-id", product, 4);
+
+    // When a request is made to get all products
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Cookie", "shopping-cart-id=".concat(shoppingCartId));
+    headers.add("Cookie", "shopping-cart-id=".concat(scp.getCartId()));
     HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-
     ShoppingCartProductDto[] body =
-        restTemplate.exchange("/api/shoppingCart", GET, requestEntity, ShoppingCartProductDto[].class).getBody();
+        restTemplate.exchange(PATH, GET, requestEntity, ShoppingCartProductDto[].class).getBody();
 
-    assertThat(body).isNotNull().hasSize(2);
-
-    ShoppingCartProductDto scpDto;
-
-    scpDto = Arrays.stream(body).filter(dto -> dto.product.sku.equals(peperoni.getSku())).findAny().get();
-    assertThat(scpDto.count).isEqualTo(peperoniCount);
-
-    scpDto = Arrays.stream(body).filter(dto -> dto.product.sku.equals(hawaii.getSku())).findAny().get();
-    assertThat(scpDto.count).isEqualTo(hawaiiCount);
+    // Response must be correct
+    assertThat(body).isNotNull().hasSize(1);
+    ShoppingCartProductDto scpDto =
+        Arrays.stream(body).filter(dto -> dto.product.sku.equals(product.getSku())).findAny().get();
+    assertThat(scpDto.count).isEqualTo(scp.getItemCount());
   }
 
   @Test
   public void mustRemoveItemFromShoppingCart() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Cookie", "shopping-cart-id=".concat(shoppingCartId));
-    HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+    // Given a product and product being in a shopping cart
+    Product product = newPersistedProduct("product-sku", "product-name", "product-description");
+    ShoppingCartProduct scp = newPersistedShoppingCartProduct("shopping-cart-id", product, 4);
 
+    // When a request is made to end point
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Cookie", "shopping-cart-id=".concat(scp.getCartId()));
+    HttpEntity<String> requestEntity = new HttpEntity<>(headers);
     HttpStatus statusCode =
-        restTemplate.exchange("/api/shoppingCart/".concat(peperoni.getSku()).concat("/-10"), POST,
-            requestEntity, Object.class).getStatusCode();
+        restTemplate.exchange(PATH + "/" + product.getSku() + "/-4", POST, requestEntity, Object.class).getStatusCode();
 
     assertThat(statusCode.value()).isEqualTo(HttpStatus.OK.value());
 
     List<ShoppingCartProduct> shoppingCart =
-        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId);
+        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(scp.getCartId());
 
-    assertThat(shoppingCart.size()).isEqualTo(1);
-
-    long peperoniCount = shoppingCart.stream().filter(scp -> scp.getProduct().equals(peperoni)).count();
-    assertThat(peperoniCount).isEqualTo(0);
-
-    long hawaiiCount = shoppingCart.stream().filter(scp -> scp.getProduct().equals(hawaii)).count();
-    assertThat(hawaiiCount).isEqualTo(1);
+    assertThat(shoppingCart).isEmpty();
   }
 }

@@ -15,7 +15,7 @@ import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
  * Represents a Product in a shopping cart (identified by a UUID) and the item count of that product in that cart.
  */
 @Entity
-@Table(name = "shopping_cart")
+@Table(name = "shopping_cart_product")
 public class ShoppingCartProduct
     implements Serializable
 {
@@ -48,5 +48,12 @@ public class ShoppingCartProduct
   @Transient
   public Product getProduct() {
     return shoppingCartProductId.getProduct();
+  }
+
+  /**
+   * Convenience method to get id from composite key.
+   */
+  public String getCartId() {
+    return shoppingCartProductId.getCartId();
   }
 }

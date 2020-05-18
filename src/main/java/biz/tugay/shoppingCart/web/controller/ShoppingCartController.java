@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "api/shoppingCart", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ShoppingCartController.PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ShoppingCartController
 {
+  public static final String PATH = "/api/shoppingCart";
+
   private ShoppingCartService shoppingCartService;
 
   @Autowired
