@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 import biz.tugay.shoppingCart.core.entity.compositeKey.ShoppingCartProductId;
 
 /**
- * Represents a Product in a shopping cart (identified by a UUID) and the item count of that product in that cart.
+ * Represents a Product in a Shopping Cart (identified by a UUID) and the item count of that product in that cart.
  */
 @Entity
 @Table(name = "shopping_cart_product")
@@ -20,18 +20,18 @@ public class ShoppingCartProduct
     implements Serializable
 {
   @EmbeddedId
-  private ShoppingCartProductId shoppingCartProductId = new ShoppingCartProductId();
+  private ShoppingCartProductId id = new ShoppingCartProductId();
 
   @Basic
   @Column(name = "item_count")
   private int itemCount;
 
-  public ShoppingCartProductId getShoppingCartProductId() {
-    return shoppingCartProductId;
+  public ShoppingCartProductId getId() {
+    return id;
   }
 
-  public void setShoppingCartProductId(ShoppingCartProductId shoppingCartId) {
-    this.shoppingCartProductId = shoppingCartId;
+  public void setId(ShoppingCartProductId shoppingCartId) {
+    this.id = shoppingCartId;
   }
 
   public int getItemCount() {
@@ -47,13 +47,13 @@ public class ShoppingCartProduct
    */
   @Transient
   public Product getProduct() {
-    return shoppingCartProductId.getProduct();
+    return id.getProduct();
   }
 
   /**
    * Convenience method to get id from composite key.
    */
   public String getCartId() {
-    return shoppingCartProductId.getCartId();
+    return id.getCartId();
   }
 }

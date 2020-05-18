@@ -45,7 +45,7 @@ public abstract class BaseIntegrationTest
 
   public ShoppingCartProduct newPersistedShoppingCartProduct(String shoppingCartId, Product product, int count) {
     ShoppingCartProduct shoppingCartProduct = new ShoppingCartProduct();
-    shoppingCartProduct.setShoppingCartProductId(new ShoppingCartProductId(shoppingCartId, product));
+    shoppingCartProduct.setId(new ShoppingCartProductId(shoppingCartId, product));
     shoppingCartProduct.setItemCount(count);
 
     shoppingCartProductRepository.save(shoppingCartProduct);

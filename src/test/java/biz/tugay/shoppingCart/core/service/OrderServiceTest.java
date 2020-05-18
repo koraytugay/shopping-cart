@@ -35,15 +35,15 @@ public class OrderServiceTest
     String orderId = orderService.submitOrder(scp.getCartId());
 
     // All shopping cart content must be available by orderId
-    List<OrderItem> orderItems = orderItemRepository.findAllByOrderItemId_OrderId(orderId);
+    List<OrderItem> orderItems = orderItemRepository.findAllById_OrderId(orderId);
     assertThat(orderItems.size()).isEqualTo(1);
 
     OrderItem orderItem = orderItems.get(0);
-    assertThat(orderItem.getOrderItemId().getProduct()).isEqualTo(product);
-    assertThat(orderItem.getOrderItemId().getOrderId()).isEqualTo(orderId);
+    assertThat(orderItem.getId().getProduct()).isEqualTo(product);
+    assertThat(orderItem.getId().getOrderId()).isEqualTo(orderId);
     assertThat(orderItem.getItemCount()).isEqualTo(scp.getItemCount());
 
     // Shopping cart must now be empty
-    assertThat(shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(scp.getCartId())).isEmpty();
+    assertThat(shoppingCartProductRepository.findAllById_CartId(scp.getCartId())).isEmpty();
   }
 }

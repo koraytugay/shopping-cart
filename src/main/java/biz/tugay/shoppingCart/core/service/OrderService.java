@@ -36,7 +36,7 @@ public class OrderService
    */
   public String submitOrder(String shoppingCartId) {
     List<ShoppingCartProduct> shoppingCartProducts =
-        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId);
+        shoppingCartProductRepository.findAllById_CartId(shoppingCartId);
 
     // Generate a random id that will represent this order.
     String orderId = UUID.randomUUID().toString();

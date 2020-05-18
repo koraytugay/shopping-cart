@@ -65,7 +65,7 @@ public class ShoppingCartControllerTest
     assertThat(statusCode.value()).isEqualTo(HttpStatus.OK.value());
 
     List<ShoppingCartProduct> shoppingCart =
-        shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(scp.getCartId());
+        shoppingCartProductRepository.findAllById_CartId(scp.getCartId());
 
     assertThat(shoppingCart).isEmpty();
   }

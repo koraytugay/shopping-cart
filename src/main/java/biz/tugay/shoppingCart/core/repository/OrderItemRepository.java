@@ -12,5 +12,5 @@ public interface OrderItemRepository
   /**
    * @return All OrderItems referenced by the <code>orderId</code>.
    */
-  List<OrderItem> findAllByOrderItemId_OrderId(String orderId);
+  List<OrderItem> findAllById_OrderId(String orderId);
 }

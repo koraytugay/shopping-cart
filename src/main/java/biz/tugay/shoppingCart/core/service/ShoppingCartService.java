@@ -26,7 +26,7 @@ public class ShoppingCartService
   public Map<Product, Integer> getShoppingCartContents(String shoppingCartId) {
     HashMap<Product, Integer> shoppingCartContents = new HashMap<>();
 
-    shoppingCartProductRepository.findAllByShoppingCartProductId_CartId(shoppingCartId)
+    shoppingCartProductRepository.findAllById_CartId(shoppingCartId)
         .forEach(scp -> shoppingCartContents.put(scp.getProduct(), scp.getItemCount()));
 
     return shoppingCartContents;
@@ -44,15 +44,17 @@ public class ShoppingCartService
   public void updateCartUpdateProductByItemCount(String cartId, String sku, int itemCount) {
     // Find the product in the shopping cart, or create a new one if it does not exist.
     ShoppingCartProductId shoppingCartProductId = new ShoppingCartProductId(cartId, new Product(sku));
-    ShoppingCartProduct shoppingCartProduct =
-        shoppingCartProductRepository.findByShoppingCartProductId(shoppingCartProductId);
 
-    if (shoppingCartProduct == null) {
+    ShoppingCartProduct shoppingCartProduct;
+    if (!shoppingCartProductRepository.findById(shoppingCartProductId).isPresent()) {
       // One cannot decrement count / remove product from a cart if it does not already exist.
       if (itemCount < 0) {
         return;
       }
       shoppingCartProduct = newShoppingCartProduct(cartId, sku);
+    }
+    else {
+      shoppingCartProduct = shoppingCartProductRepository.findById(shoppingCartProductId).get();
     }
 
     // Update the product count in the cart
@@ -71,8 +73,8 @@ public class ShoppingCartService
   private ShoppingCartProduct newShoppingCartProduct(String cartId, String sku) {
     ShoppingCartProduct shoppingCartProduct = new ShoppingCartProduct();
 
-    shoppingCartProduct.getShoppingCartProductId().setCartId(cartId);
-    shoppingCartProduct.getShoppingCartProductId().setProduct(new Product(sku));
+    shoppingCartProduct.getId().setCartId(cartId);
+    shoppingCartProduct.getId().setProduct(new Product(sku));
     shoppingCartProduct.setItemCount(0);
 
     return shoppingCartProduct;

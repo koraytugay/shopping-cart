@@ -37,8 +37,8 @@ public class OrderController
    */
   @GetMapping(value = "{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<OrderItemDto> getOrderItemsForOrder(@PathVariable("orderId") String orderId) {
-    return orderItemRepository
-        .findAllByOrderItemId_OrderId(orderId).stream().map(OrderItemDto::new).collect(Collectors.toList());
+    return
+        orderItemRepository.findAllById_OrderId(orderId).stream().map(OrderItemDto::new).collect(Collectors.toList());
   }
 
   /**

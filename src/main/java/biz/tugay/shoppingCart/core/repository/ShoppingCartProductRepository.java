@@ -12,10 +12,5 @@ public interface ShoppingCartProductRepository
   /**
    * @return All products together with their counts in this cart.
    */
-  List<ShoppingCartProduct> findAllByShoppingCartProductId_CartId(String cartId);
-
-  /**
-   * @return ShoppingCartProduct for a product in a cart identified by its key.
-   */
-  ShoppingCartProduct findByShoppingCartProductId(ShoppingCartProductId shoppingCartProductId);
+  List<ShoppingCartProduct> findAllById_CartId(String cartId);
 }

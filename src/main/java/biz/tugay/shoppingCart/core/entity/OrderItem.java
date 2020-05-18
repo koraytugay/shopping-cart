@@ -22,7 +22,7 @@ public class OrderItem
     implements Serializable
 {
   @EmbeddedId
-  private OrderItemId orderItemId;
+  private OrderItemId id;
 
   @Basic
   @Column(name = "item_count")
@@ -31,17 +31,17 @@ public class OrderItem
   public OrderItem() {
   }
 
-  public OrderItem(OrderItemId orderItemId, int itemCount) {
-    this.orderItemId = orderItemId;
+  public OrderItem(OrderItemId id, int itemCount) {
+    this.id = id;
     this.itemCount = itemCount;
   }
 
-  public OrderItemId getOrderItemId() {
-    return orderItemId;
+  public OrderItemId getId() {
+    return id;
   }
 
-  public void setOrderItemId(OrderItemId orderIdProductSku) {
-    this.orderItemId = orderIdProductSku;
+  public void setId(OrderItemId orderIdProductSku) {
+    this.id = orderIdProductSku;
   }
 
   public int getItemCount() {
@@ -57,6 +57,6 @@ public class OrderItem
    */
   @Transient
   public Product getProduct() {
-    return orderItemId.getProduct();
+    return id.getProduct();
   }
 }
