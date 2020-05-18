@@ -3,6 +3,7 @@ package biz.tugay.shoppingCart.core.entity;
 import java.io.Serializable;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,12 +14,15 @@ public class Product
     implements Serializable
 {
   @Id
+  @Column(name = "sku", length = 36)
   private String sku;
 
   @Basic
+  @Column(name = "name")
   private String name;
 
   @Basic
+  @Column(name = "description")
   private String description;
 
   public String getSku() {

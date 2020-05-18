@@ -11,11 +11,11 @@ public class ShoppingCartProductId
     implements Serializable
 {
   @Basic
-  @Column(name = "cart_id")
+  @Column(name = "cart_id", length = 36)
   private String cartId;
 
   @Basic
-  @Column(name = "sku")
+  @Column(name = "sku", length = 36)
   private String sku;
 
   public ShoppingCartProductId() {

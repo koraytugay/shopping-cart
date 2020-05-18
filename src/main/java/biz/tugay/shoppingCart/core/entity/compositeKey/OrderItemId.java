@@ -11,7 +11,7 @@ public class OrderItemId
     implements Serializable
 {
   @Basic
-  @Column(name = "order_id")
+  @Column(name = "order_id", length = 36)
   private String orderId;
 
   @Basic
