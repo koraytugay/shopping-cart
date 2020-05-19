@@ -11,6 +11,7 @@ import biz.tugay.shoppingCart.core.repository.OrderItemRepository;
 import biz.tugay.shoppingCart.core.repository.ShoppingCartProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService
@@ -34,6 +35,7 @@ public class OrderService
    * @param shoppingCartId Shopping Cart in the database to be submitted.
    * @return The submitted orders order id, that can be later used to reference the submitted order.
    */
+  @Transactional
   public String submitOrder(String shoppingCartId) {
     List<ShoppingCartProduct> shoppingCartProducts =
         shoppingCartProductRepository.findAllById_CartId(shoppingCartId);
@@ -48,6 +50,7 @@ public class OrderService
     }).collect(Collectors.toList());
 
     // Save Order, clear shopping cart.
+    // Must be atomic, hence the @transactional
     orderItemRepository.saveAll(orderItems);
     shoppingCartProductRepository.deleteAll(shoppingCartProducts);
 
