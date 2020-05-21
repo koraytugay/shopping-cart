@@ -1,7 +1,6 @@
 package biz.tugay.shoppingCart.core.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import biz.tugay.shoppingCart.core.entity.Product;
 import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
@@ -23,13 +22,8 @@ public class ShoppingCartService
   /**
    * @return A Map of Products and the number of items in the cart identified by <code>shoppingCartId</code>.
    */
-  public Map<Product, Integer> getShoppingCartContents(String shoppingCartId) {
-    HashMap<Product, Integer> shoppingCartContents = new HashMap<>();
-
-    shoppingCartProductRepository.findAllById_CartId(shoppingCartId)
-        .forEach(scp -> shoppingCartContents.put(scp.getProduct(), scp.getItemCount()));
-
-    return shoppingCartContents;
+  public List<ShoppingCartProduct> getShoppingCartContents(String shoppingCartId) {
+    return shoppingCartProductRepository.findAllById_CartId(shoppingCartId);
   }
 
   /**

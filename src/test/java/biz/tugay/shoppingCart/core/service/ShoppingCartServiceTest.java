@@ -1,6 +1,6 @@
 package biz.tugay.shoppingCart.core.service;
 
-import java.util.Map;
+import java.util.List;
 
 import biz.tugay.shoppingCart.BaseIntegrationTest;
 import biz.tugay.shoppingCart.core.entity.Product;
@@ -23,12 +23,14 @@ public class ShoppingCartServiceTest
     ShoppingCartProduct scp = newPersistedShoppingCartProduct("shopping-cart-id", product, 4);
 
     // When all contents is fetched
-    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
+    List<ShoppingCartProduct> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
 
     // Product and its count must be correct
     assertThat(shoppingCartContents.size()).isEqualTo(1);
-    assertThat(shoppingCartContents.keySet().iterator().next()).isEqualTo(product);
-    assertThat(shoppingCartContents.get(product)).isEqualTo(scp.getItemCount());
+
+    ShoppingCartProduct shoppingCartProduct = shoppingCartContents.iterator().next();
+    assertThat(shoppingCartProduct.getProduct()).isEqualTo(product);
+    assertThat(shoppingCartProduct.getItemCount()).isEqualTo(scp.getItemCount());
   }
 
   @Test
@@ -41,10 +43,13 @@ public class ShoppingCartServiceTest
     shoppingCartService.updateCartUpdateProductByItemCount(scp.getCartId(), product.getSku(), 4);
 
     // Product and its count must be correct
-    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
+    List<ShoppingCartProduct> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
+
     assertThat(shoppingCartContents.size()).isEqualTo(1);
-    assertThat(shoppingCartContents.keySet().iterator().next()).isEqualTo(product);
-    assertThat(shoppingCartContents.get(product)).isEqualTo(8);
+
+    ShoppingCartProduct shoppingCartProduct = shoppingCartContents.iterator().next();
+    assertThat(shoppingCartProduct.getProduct()).isEqualTo(product);
+    assertThat(shoppingCartProduct.getItemCount()).isEqualTo(8);
   }
 
   @Test
@@ -60,7 +65,8 @@ public class ShoppingCartServiceTest
     shoppingCartService.updateCartUpdateProductByItemCount(scp.getCartId(), anotherProduct.getSku(), 1);
 
     // Shopping cart must now have 2 items in it
-    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
+    List<ShoppingCartProduct> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
+
     assertThat(shoppingCartContents.size()).isEqualTo(2);
   }
 
@@ -74,7 +80,8 @@ public class ShoppingCartServiceTest
     shoppingCartService.updateCartUpdateProductByItemCount(scp.getCartId(), product.getSku(), -scp.getItemCount());
 
     // Shopping cart must now be empty
-    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
-    assertThat(shoppingCartContents.keySet()).isEmpty();
+    List<ShoppingCartProduct> shoppingCartContents = shoppingCartService.getShoppingCartContents(scp.getCartId());
+
+    assertThat(shoppingCartContents).isEmpty();
   }
 }

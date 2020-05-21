@@ -2,9 +2,8 @@ package biz.tugay.shoppingCart.web.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import biz.tugay.shoppingCart.core.entity.Product;
+import biz.tugay.shoppingCart.core.entity.ShoppingCartProduct;
 import biz.tugay.shoppingCart.core.service.ShoppingCartService;
 import biz.tugay.shoppingCart.web.RequestContext;
 import biz.tugay.shoppingCart.web.dto.ProductDto;
@@ -37,14 +36,15 @@ public class ShoppingCartController
 
   @GetMapping
   public List<ShoppingCartProductDto> getShoppingCart() {
-    List<ShoppingCartProductDto> shoppingCartProductList = new ArrayList<>();
+    List<ShoppingCartProduct> shoppingCartContents
+        = shoppingCartService.getShoppingCartContents(RequestContext.getShoppingCartId());
 
-    String shoppingCartId = RequestContext.getShoppingCartId();
-    Map<Product, Integer> shoppingCartContents = shoppingCartService.getShoppingCartContents(shoppingCartId);
-    shoppingCartContents.forEach((product, itemCount) -> {
-      shoppingCartProductList.add(new ShoppingCartProductDto(new ProductDto(product), itemCount));
-    });
+    List<ShoppingCartProductDto> shoppingCartProductDtos = new ArrayList<>();
+    for (ShoppingCartProduct shoppingCartProduct : shoppingCartContents) {
+      ProductDto productDto = new ProductDto(shoppingCartProduct.getProduct());
+      shoppingCartProductDtos.add(new ShoppingCartProductDto(productDto, shoppingCartProduct.getItemCount()));
+    }
 
-    return shoppingCartProductList;
+    return shoppingCartProductDtos;
   }
 }
