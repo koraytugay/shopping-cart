@@ -13,7 +13,7 @@ import biz.tugay.shoppingCart.core.entity.compositeKey.OrderItemId;
 
 /**
  * An OrderItem is an entry in an Order, in other words: an Order has one to many OrderItems.
- * An `orederId` is a unique id that represents a single Order.
+ * An `orderId` is a unique id that represents a single Order.
  * An OrderItem is identified by composite key: order-id and a unique Product.
  */
 @Entity
